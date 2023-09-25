@@ -1,1 +1,1 @@
-# 52ck.github.io
+# y8b.cn
