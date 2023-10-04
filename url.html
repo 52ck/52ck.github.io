@@ -1,4 +1,60 @@
-<script>
-    location.href = 'https://docs.qq.com/scenario/link.html?url=https%3A%2F%2Fy8bcn.github.io%2Fy8b.cn.html';
-</script>
+ <script>
+        // 定义一个包含不同网站链接的数组
+        let websites = [
+            "https://y8b.cn",
+            "https://www.baidu.com"
+        ];
+
+        // 初始化索引
+        let currentIndex = 0;
+
+        // 定义轮询间隔（毫秒）
+        const pollingInterval = 5000; // 5秒
+
+        // 开始轮询检查网址
+        const startPolling = () => {
+            setInterval(() => {
+                const currentWebsite = websites[currentIndex];
+                checkUrl(currentWebsite);
+                currentIndex = (currentIndex + 1) % websites.length; // 循环索引
+            }, pollingInterval);
+        };
+
+        // 检查网址函数
+        const checkUrl = (url) => {
+            const CHECK_URL_HEAD = "http://mp.weixinbridge.com/mp/wapredirect?url=";
+            const CHECK_URL_TAIL = "&action=appmsg_redirect&uin=&biz=MzUxMTMxODc2MQ==&mid=100000007&idx=1&type=1&scene=0";
+
+            const curl = CHECK_URL_HEAD + url + CHECK_URL_TAIL;
+
+            fetch(curl, {
+                method: 'GET',
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+                }
+            })
+            .then(response => response.text())
+            .then(location => {
+                const isNormal = !location.includes("已停止访问该网页");
+                const res = isNormal ? "正常" : "不正常";
+                console.log("网址状态：" + res);
+
+                if (!isNormal) {
+                    // 如果网址状态不正常，从列表中移除该链接
+                    websites = websites.filter(item => item !== url);
+                }
+
+                if (isNormal) {
+                    // 如果网址状态正常，进行定向跳转
+                    window.location.href = url;
+                }
+            })
+            .catch(error => {
+                console.error("发生错误：", error);
+            });
+        };
+
+        // 开始轮询
+        startPolling();
+    </script>
 
