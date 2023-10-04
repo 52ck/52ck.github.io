@@ -2,60 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自动定时重定向示例</title>
+    <title>URL Redirector</title>
 </head>
 <body>
-   
+    <h1>URL Redirector</h1>
 
     <script>
-        // 定义一个包含不同网站链接的数组
-        let websites = [
-            "https://www.example.com",
-            "https://www.google.com",
-            "https://www.openai.com"
-        ];
-
-        // 初始化索引
-        let currentIndex = 0;
-
-        // 定义轮询间隔（毫秒）
-        const pollingInterval = 5000; // 5秒
-
-        // 开始轮询检查网址
-        const startPolling = () => {
-            setInterval(() => {
-                const currentWebsite = websites[currentIndex];
-                checkUrl(currentWebsite);
-                currentIndex = (currentIndex + 1) % websites.length; // 循环索引
-            }, pollingInterval);
+        // 定义要检查的多个地址以及它们的映射关系
+        const urlsToCheck = {
+            "http://www.0vzf.cn/": "http://example.com/normal",
+            "http://www.example.com/nonexistent": "http://example.com/normal"
         };
 
-        // 检查网址函数
-        const checkUrl = (url) => {
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    // 如果响应正常，进行定向跳转
-                    window.location.href = url;
-                } else {
-                    // 如果响应不正常，从列表中移除该链接
-                    websites = websites.filter(item => item !== url);
-                    console.log("网址状态：不正常");
-                }
-            })
-            .catch(error => {
-                console.error("发生错误：", error);
-            });
-        };
+        // 函数来检查一个地址
+        async function checkUrl(originalUrl, mappedUrl) {
+            const fullUrl = `http://mp.weixinbridge.com/mp/wapredirect?url=${originalUrl}&action=appmsg_redirect&uin=&biz=MzUxMTMxODc2MQ==&mid=100000007&idx=1&type=1&scene=0`;
 
-        // 开始轮询
-        startPolling();
+            try {
+                const response = await fetch(fullUrl, {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+                    }
+                });
+
+                const responseBody = await response.text();
+                // 如果响应内容包含 "已停止访问该网页"，则进行页面重定向到映射地址
+                if (responseBody.includes("已停止访问该网页")) {
+                    window.location.href = mappedUrl;
+                }
+            } catch (error) {
+                // 处理可能发生的异常
+                console.error(error);
+            }
+        }
+
+        // 并行处理多个地址的检查
+        async function checkUrlsParallel() {
+            const promises = [];
+
+            for (const [originalUrl, mappedUrl] of Object.entries(urlsToCheck)) {
+                promises.push(checkUrl(originalUrl, mappedUrl));
+            }
+
+            await Promise.all(promises);
+        }
+
+        // 调用并行处理函数
+        checkUrlsParallel();
     </script>
 </body>
 </html>
