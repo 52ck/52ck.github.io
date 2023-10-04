@@ -33,31 +33,20 @@
 
         // 检查网址函数
         const checkUrl = (url) => {
-            const CHECK_URL_HEAD = "http://mp.weixinbridge.com/mp/wapredirect?url=";
-            const CHECK_URL_TAIL = "&action=appmsg_redirect&uin=&biz=MzUxMTMxODc2MQ==&mid=100000007&idx=1&type=1&scene=0";
-
-            const curl = CHECK_URL_HEAD + url + CHECK_URL_TAIL;
-
-            fetch(curl, {
+            fetch(url, {
                 method: 'GET',
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
                 }
             })
-            .then(response => response.text())
-            .then(location => {
-                const isNormal = !location.includes("已停止访问该网页");
-                const res = isNormal ? "正常" : "不正常";
-                console.log("网址状态：" + res);
-
-                if (!isNormal) {
-                    // 如果网址状态不正常，从列表中移除该链接
-                    websites = websites.filter(item => item !== url);
-                }
-
-                if (isNormal) {
-                    // 如果网址状态正常，进行定向跳转
+            .then(response => {
+                if (response.ok) {
+                    // 如果响应正常，进行定向跳转
                     window.location.href = url;
+                } else {
+                    // 如果响应不正常，从列表中移除该链接
+                    websites = websites.filter(item => item !== url);
+                    console.log("网址状态：不正常");
                 }
             })
             .catch(error => {
