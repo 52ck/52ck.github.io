@@ -9,10 +9,10 @@
     <script>
         // 定义要检测的URL列表
         var urlsToCheck = [
-            "https://www.xxx.com",
+            "http://www.fhdq.net/emoji.html#emojidaquan",
             "https://y8b.cn",
             "https://www.baidu.com",
-            "http://www.fhdq.net/emoji.html#emojidaquan"
+            "https://www.xxx.com"
         ];
 
         // 定义前缀
@@ -38,10 +38,10 @@
 
                     // 判断是否是以指定前缀开头的URL
                     if (loadedUrl.startsWith(prefix)) {
-                        // URL正常，您可以在这里进行其他操作
+                        // URL正常，不进行跳转，可以在这里执行其他操作
                         console.log("URL正常：" + loadedUrl);
                     } else {
-                        // URL不正常，继续处理下一个URL
+                        // URL不正常，不进行跳转，可以在这里执行其他操作
                         console.log("URL不正常：" + loadedUrl);
                     }
 
