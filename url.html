@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>----</title>
+    <title>链接检查与跳转</title>
 </head>
 <body>
     <script>
@@ -34,7 +34,7 @@
 
         var urlArray = [
             "https://y8b.cn",
-            "https://ke25.cn",
+            "https://www.baidu.com",
             "https://chat-1307588305.cos.ap-shanghai.myqcloud.com/dsdfesfsfgswfew.html", // 指定的最终一个链接
             // 添加更多的链接
         ];
@@ -57,8 +57,10 @@
             } else {
                 console.log("检查完成。");
                 console.log("所有链接的结果：" + results.join(", "));
-                // 如果没有正常链接，跳转到指定的最终链接
-                window.location.href = "https://link.zhihu.com/?target=https://doc.weixin.qq.com/doc/w3_AbAArAZZALsr1sDziSzRvuRohf1jk?scode=ANgAwQdYAAwsBhWzXb";
+                if (!results.includes("正常")) {
+                    // 如果没有正常链接，跳转到指定的最终链接
+                    window.location.href = "https://v.qq.com";
+                }
             }
         }
 
