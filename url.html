@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL检测和定向</title>
+    <title>URL检测</title>
 </head>
 <body>
     <script>
@@ -38,15 +38,18 @@
 
                     // 判断是否是以指定前缀开头的URL
                     if (loadedUrl.startsWith(prefix)) {
-                        // URL正常，执行重定向操作
-                        window.location.href = loadedUrl;
+                        // URL正常，您可以在这里进行其他操作
+                        console.log("URL正常：" + loadedUrl);
                     } else {
                         // URL不正常，继续处理下一个URL
-                        processNextUrl(index + 1);
+                        console.log("URL不正常：" + loadedUrl);
                     }
 
                     // 移除iframe
                     document.body.removeChild(iframe);
+
+                    // 继续处理下一个URL
+                    processNextUrl(index + 1);
                 };
             }
         }
