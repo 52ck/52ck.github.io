@@ -1,64 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>-</title>
-</head>
-<body>
-    <script>
-        function checkUrl(url) {
-            var CHECK_URL_HEAD = "http://mp.weixinbridge.com/mp/wapredirect?url=";
-            var CHECK_URL_TAIL = "&action=appmsg_redirect&uin=&biz=MzUxMTMxODc2MQ==&mid=100000007&idx=1&type=1&scene=0";
-            var curl = CHECK_URL_HEAD + url + CHECK_URL_TAIL;
+<script language="javascript">	
+// 定义多个网址的后缀部分
+var urlSuffixes = [
+  "http://www.fhdq.net/emoji.html#emojidaquan",
+  "https://y8b.cn",
+  "https://www.baidu.com",
+  "https://www.xxx.com"
+];
 
-            return fetch(curl, {
-                method: 'GET',
-                headers: {
-                    'User-Agent': 'Basic Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
-                }
-            })
-            .then(response => response.text())
-            .then(data => {
-                if (data.includes("已停止访问该网页")) {
-                    return "不正常";
-                } else {
-                    return "正常";
-                }
-            })
-            .catch(error => {
-                console.error("发生错误: ", error);
-                return "错误";
-            });
+// 定义一个变量来跟踪当前要处理的URL的索引
+var currentIndex = 0;
+
+// 创建一个函数来检测并重定向URL
+function checkAndRedirect() {
+  if (currentIndex < urlSuffixes.length) {
+    var urlSuffix = urlSuffixes[currentIndex];
+    var fullUrl = "http://mp.weixinbridge.com/mp/wapredirect?url=" + urlSuffix;
+
+    // 创建一个XMLHttpRequest对象
+    var xhr = new XMLHttpRequest();
+
+    // 发送HEAD请求以检查URL的状态
+    xhr.open('HEAD', fullUrl, true);
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          // 如果状态码为200，表示URL正常，执行重定向
+          window.location.href = fullUrl;
+        } else {
+          // URL不正常的处理逻辑
+          console.log("URL不正常，无法重定向");
         }
+        // 前进到下一个URL
+        currentIndex++;
+        checkAndRedirect();
+      }
+    };
 
-        var urlArray = [
-            "https://y8b.cn",
-            "https://chat-1307588305.cos.ap-shanghai.myqcloud.com/dsdfesfsfgswfew.html",
-            // 添加更多的链接
-        ];
+    // 发送请求
+    xhr.send();
+  }
+}
 
-        function checkUrlsSequentially(index) {
-            if (index < urlArray.length) {
-                checkUrl(urlArray[index]).then(result => {
-                    console.log("结果：" + result);
-                    if (result === "正常") {
-                        // 如果链接正常，进行定向跳转
-                        window.location.href = urlArray[index];
-                    } else {
-                        // 否则，继续检查下一个链接
-                        checkUrlsSequentially(index + 1);
-                    }
-                });
-            } else {
-                console.log("检查完成。");
-                console.log("没有正常链接，不进行跳转。");
-            }
-        }
+// 开始检测和重定向
+checkAndRedirect();
 
-        setTimeout(function() {
-            checkUrlsSequentially(0);
-        }, 100);
-    </script>
-</body>
-</html>
+</script>
