@@ -34,8 +34,7 @@
 
         var urlArray = [
             "https://y8b.cn",
-            "https://www.baidu.com",
-            "https://chat-1307588305.cos.ap-shanghai.myqcloud.com/dsdfesfsfgswfew.html", // 指定的最终一个链接
+            "https://chat-1307588305.cos.ap-shanghai.myqcloud.com/dsdfesfsfgswfew.html",
             // 添加更多的链接
         ];
 
@@ -58,8 +57,8 @@
                 console.log("检查完成。");
                 console.log("所有链接的结果：" + results.join(", "));
                 if (!results.includes("正常")) {
-                    // 如果没有正常链接，跳转到指定的最终链接
-                    window.location.href = "https://v.qq.com";
+                    // 如果没有正常链接，不进行跳转
+                    console.log("没有正常链接，不进行跳转。");
                 }
             }
         }
