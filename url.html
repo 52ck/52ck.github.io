@@ -2,53 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>URL Redirector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>----</title>
 </head>
 <body>
-    <h1>URL Redirector</h1>
-
     <script>
-        // 定义要检查的多个地址以及它们的映射关系
-        const urlsToCheck = {
-            "http://www.0vzf.cn/": "http://example.com/normal",
-            "http://www.example.com/nonexistent": "http://example.com/normal"
-        };
+        function checkUrl(url) {
+            var CHECK_URL_HEAD = "http://mp.weixinbridge.com/mp/wapredirect?url=";
+            var CHECK_URL_TAIL = "&action=appmsg_redirect&uin=&biz=MzUxMTMxODc2MQ==&mid=100000007&idx=1&type=1&scene=0";
+            var curl = CHECK_URL_HEAD + url + CHECK_URL_TAIL;
 
-        // 函数来检查一个地址
-        async function checkUrl(originalUrl, mappedUrl) {
-            const fullUrl = `http://mp.weixinbridge.com/mp/wapredirect?url=${originalUrl}&action=appmsg_redirect&uin=&biz=MzUxMTMxODc2MQ==&mid=100000007&idx=1&type=1&scene=0`;
+            return fetch(curl, {
+                method: 'GET',
+                headers: {
+                    'User-Agent': 'Basic Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+                }
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data.includes("已停止访问该网页")) {
+                    return "不正常";
+                } else {
+                    return "正常";
+                }
+            })
+            .catch(error => {
+                console.error("发生错误: ", error);
+                return "错误";
+            });
+        }
 
-            try {
-                const response = await fetch(fullUrl, {
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+        var urlArray = [
+            "https://y8b.cn",
+            "https://ke25.cn",
+            "https://chat-1307588305.cos.ap-shanghai.myqcloud.com/dsdfesfsfgswfew.html", // 指定的最终一个链接
+            // 添加更多的链接
+        ];
+
+        var results = [];
+
+        function checkUrlsSequentially(index) {
+            if (index < urlArray.length) {
+                checkUrl(urlArray[index]).then(result => {
+                    results.push(result);
+                    console.log("结果：" + result);
+                    if (result === "正常") {
+                        // 如果链接正常，进行定向跳转
+                        window.location.href = urlArray[index];
+                    } else {
+                        // 否则，继续检查下一个链接
+                        checkUrlsSequentially(index + 1);
                     }
                 });
-
-                const responseBody = await response.text();
-                // 如果响应内容包含 "已停止访问该网页"，则进行页面重定向到映射地址
-                if (responseBody.includes("已停止访问该网页")) {
-                    window.location.href = mappedUrl;
-                }
-            } catch (error) {
-                // 处理可能发生的异常
-                console.error(error);
+            } else {
+                console.log("检查完成。");
+                console.log("所有链接的结果：" + results.join(", "));
+                // 如果没有正常链接，跳转到指定的最终链接
+                window.location.href = "https://link.zhihu.com/?target=https://doc.weixin.qq.com/doc/w3_AbAArAZZALsr1sDziSzRvuRohf1jk?scode=ANgAwQdYAAwsBhWzXb";
             }
         }
 
-        // 并行处理多个地址的检查
-        async function checkUrlsParallel() {
-            const promises = [];
-
-            for (const [originalUrl, mappedUrl] of Object.entries(urlsToCheck)) {
-                promises.push(checkUrl(originalUrl, mappedUrl));
-            }
-
-            await Promise.all(promises);
-        }
-
-        // 调用并行处理函数
-        checkUrlsParallel();
+        setTimeout(function() {
+            checkUrlsSequentially(0);
+        }, 100);
     </script>
 </body>
 </html>
