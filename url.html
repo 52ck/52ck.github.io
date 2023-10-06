@@ -1,47 +1,57 @@
-<script language="javascript">	
-// 定义多个网址的后缀部分
-var urlSuffixes = [
-  "https://www.xxx.com",
-  "https://y8b.cn",
-  "https://www.baidu.com",
-  "http://www.fhdq.net/emoji.html#emojidaquan"
-];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL检测和重定向</title>
+</head>
+<body>
+  <script>
+    // 定义多个网址的后缀部分
+    var urlSuffixes = [
+      "https://www.xxx.com",
+      "https://y8b.cn",
+      "https://www.baidu.com",
+      "http://www.fhdq.net/emoji.html#emojidaquan"
+    ];
 
-// 定义一个变量来跟踪当前要处理的URL的索引
-var currentIndex = 0;
+    // 定义一个变量来跟踪当前要处理的URL的索引
+    var currentIndex = 0;
 
-// 创建一个函数来检测并重定向URL
-function checkAndRedirect() {
-  if (currentIndex < urlSuffixes.length) {
-    var urlSuffix = urlSuffixes[currentIndex];
-    var fullUrl = "http://mp.weixinbridge.com/mp/wapredirect?url=" + urlSuffix;
+    // 创建一个函数来检测并重定向URL
+    function checkAndRedirect() {
+      if (currentIndex < urlSuffixes.length) {
+        var urlSuffix = urlSuffixes[currentIndex];
+        var fullUrl = "http://mp.weixinbridge.com/mp/wapredirect?url=" + urlSuffix;
 
-    // 创建一个XMLHttpRequest对象
-    var xhr = new XMLHttpRequest();
+        // 创建一个XMLHttpRequest对象
+        var xhr = new XMLHttpRequest();
 
-    // 发送HEAD请求以检查URL的状态
-    xhr.open('HEAD', fullUrl, true);
+        // 发送HEAD请求以检查URL的状态
+        xhr.open('HEAD', fullUrl, true);
 
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          // 如果状态码为200，表示URL正常，执行重定向
-          window.location.href = fullUrl;
-        } else {
-          // URL不正常的处理逻辑
-          console.log("URL不正常，无法重定向");
-        }
-        // 前进到下一个URL
-        currentIndex++;
-        checkAndRedirect();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              // 如果状态码为200，表示URL正常，执行重定向
+              window.location.href = fullUrl;
+            } else {
+              // URL不正常的处理逻辑
+              console.log("URL不正常，无法重定向");
+            }
+            // 前进到下一个URL
+            currentIndex++;
+            checkAndRedirect();
+          }
+        };
+
+        // 发送请求
+        xhr.send();
       }
-    };
+    }
 
-    // 发送请求
-    xhr.send();
-  }
-}
-
-// 开始检测和重定向
-checkAndRedirect();
-</script>
+    // 开始检测和重定向
+    checkAndRedirect();
+  </script>
+</body>
+</html>
