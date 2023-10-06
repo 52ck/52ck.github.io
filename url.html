@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>链接检查与跳转</title>
+    <title>-</title>
 </head>
 <body>
     <script>
@@ -38,12 +38,9 @@
             // 添加更多的链接
         ];
 
-        var results = [];
-
         function checkUrlsSequentially(index) {
             if (index < urlArray.length) {
                 checkUrl(urlArray[index]).then(result => {
-                    results.push(result);
                     console.log("结果：" + result);
                     if (result === "正常") {
                         // 如果链接正常，进行定向跳转
@@ -55,11 +52,7 @@
                 });
             } else {
                 console.log("检查完成。");
-                console.log("所有链接的结果：" + results.join(", "));
-                if (!results.includes("正常")) {
-                    // 如果没有正常链接，不进行跳转
-                    console.log("没有正常链接，不进行跳转。");
-                }
+                console.log("没有正常链接，不进行跳转。");
             }
         }
 
