@@ -1,4 +1,68 @@
-<script language="javascript">	
-setTimeout(function(){var arr=["https://doc.weixin.qq.com/doc/w3_AeYApgYpAMgCNFKcDxtXBSiWmCviz?scode=AKUAPwf0AAgoCbSfW5"];window.location.href=arr[
-parseInt(Math.random()*arr.length)];},0);
-</script>
+ <!DOCTYPE html>
+ <html lang="zh-CN">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>.</title>
+     <style>
+         #doc-container {
+             position: relative;
+             border: 1px solid #ccc;
+             margin: 20px;
+         }
+         
+         #close-btn {
+             position: absolute;
+             top: 10px;
+             right: 10px;
+             background: #fff;
+             border: none;
+             font-size: 18px;
+             cursor: pointer;
+             z-index: 1000;
+         }
+ 
+         /* 移动端全屏适配 */
+         @media (max-width: 768px) {
+             #doc-container {
+                 position: fixed;
+                 top: 0;
+                 left: 0;
+                 width: 100vw;
+                 height: 100vh;
+                 margin: 0;
+                 border: none;
+                 z-index: 9999;
+             }
+             
+             iframe {
+                 width: 100% !important;
+                 height: 100% !important;
+             }
+         }
+     </style>
+ </head>
+ <body>
+     <div id="doc-container">
+         <button id="close-btn" style="padding: 8px 12px;">×</button>
+         <iframe 
+             src="https://doc.weixin.qq.com/doc/w3_AeYApgYpAMgCNFKcDxtXBSiWmCviz?scode=AKUAPwf0AAgoCbSfW5" 
+             frameborder="0" 
+             allowfullscreen 
+             style="width: 100%; min-height: 600px;">
+         </iframe>
+     </div>
+ 
+     <script>
+         // 关闭按钮功能 
+         document.getElementById('close-btn').addEventListener('click', function() {
+             document.getElementById('doc-container').style.display = 'none';
+             
+             // 企业微信专用关闭方式 
+             if (typeof WeixinJSBridge !== 'undefined') {
+                 WeixinJSBridge.call('closeWindow');
+             }
+         });
+     </script>
+ </body>
+ </html>
